@@ -1,7 +1,7 @@
 'use strict';
 /* global JSThread */
 
-let $ = document.getElementById.bind(document); // jquery extra super lite, lol
+let getId = document.getElementById.bind(document);
 
 window.onload = JSThread.create(function *(e) {
 	console.log('window.onload', e);
@@ -16,7 +16,7 @@ window.onload = JSThread.create(function *(e) {
 				// do some work!
 			}
 
-			$(id).innerText = c;
+			getId(id).innerText = c;
 			yield; // yield to the event loop
 		}
 
@@ -28,7 +28,7 @@ window.onload = JSThread.create(function *(e) {
 		console.log('Initializing', id);
 
 		for (let c = 1; c < loops; c++) {
-			$(id).innerText = c;
+			getId(id).innerText = c;
 			await JSThread.sleep(wait);
 		}
 
@@ -37,34 +37,34 @@ window.onload = JSThread.create(function *(e) {
 
 	// spawn some threads
 	genThread('genThreadA', 200).then(id => {
-		$(id).innerText = id + ' done!';
+		getId(id).innerText = id + ' done!';
 	});
 
 	genThread('genThreadB', 500).then(id => {
-		$(id).innerText = id + ' done!';
+		getId(id).innerText = id + ' done!';
 	});
 
 	genThread('genThreadC', 1000).then(id => {
-		$(id).innerText = id + ' done!';
+		getId(id).innerText = id + ' done!';
 	});
 
 	asyncThread('asyncThreadA', 200).then(id => {
-		$(id).innerText = id + ' done!';
+		getId(id).innerText = id + ' done!';
 	});
 
 	asyncThread('asyncThreadB', 500).then(id => {
-		$(id).innerText = id + ' done!';
+		getId(id).innerText = id + ' done!';
 	});
 
 	asyncThread('asyncThreadC', 1000, 1000 / 60).then(id => { // 60 fps
-		$(id).innerText = id + ' done!';
+		getId(id).innerText = id + ' done!';
 	});
 
 	console.log('Done setting up threads...');
 
 	// infinitely do some work
 	for (let c = 0; true; c++) {
-		$('onload').innerText = c;
+		getId('onload').innerText = c;
 		yield; // yield to the event loop (allows DOM updates, prevents warnings about lengthy event handlers)
 	}
 });

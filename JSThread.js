@@ -35,7 +35,7 @@ let JSThread = { // cooperative multitasking library - accepts normal, async, or
 	// creates a thread function that is ready for execution
 	create: thread => {
 		if (!JSThread.valid(thread)) {
-			throw new Error('Pseudo-Threading requires normal, async, or generator function!');
+			throw new Error('Pseudo-Threading accepts a normal, async, or generator function!');
 		}
 
 		return (...args) => new Promise((resolve, reject) => setImmediate(() => { // defer init until next event loop so no function code executes during current block
