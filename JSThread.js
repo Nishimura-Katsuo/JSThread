@@ -27,7 +27,7 @@ let JSThread = { // cooperative multitasking library - accepts normal, async, or
 	yield: () => new Promise(resolve => setImmediate(resolve)),
 
 	// promise that resolves after 'ms' milliseconds
-	sleep: ms => new Promise(resolve => (ms && ms > 0) ? setTimeout(resolve, ms) : setImmediate(resolve)),
+	sleep: ms => new Promise(resolve => (typeof ms === 'number') ? setTimeout(resolve, ms) : setImmediate(resolve)),
 
 	// returns true if valid for threading, or false otherwise
 	valid: thread => Boolean(thread && typeof thread === 'function'),
@@ -57,6 +57,8 @@ let JSThread = { // cooperative multitasking library - accepts normal, async, or
 
 					if (ret.done) {
 						resolve(ret.value);
+					} else if (typeof ret.value === 'number') {
+						setTimeout(t, ret.value);
 					} else {
 						setImmediate(t);
 					}
