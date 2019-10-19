@@ -13,7 +13,13 @@ if (!this.setImmediate) { // polyfill for non-node applications, way faster than
 		});
 
 		this.setImmediate = (func, ...args) => {
-			let fid = ID++;
+			let fid;
+
+			// Search for open fid... I think 10,000,000 is enough lol
+			do {
+				fid = ID = (ID + 1) % 10000000;
+			} while (funcs[fid]);
+
 			funcs[fid] = {func, args};
 			window.postMessage({fid});
 		};
