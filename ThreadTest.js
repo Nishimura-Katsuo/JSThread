@@ -5,6 +5,7 @@ let getId = document.getElementById.bind(document);
 
 window.onload = JSThread.create(function *(e) {
 	console.log('window.onload', e);
+	getId('polyfillStatus').innerText = JSThread.polyfillStatus;
 	console.log('Setting up threads...');
 
 	// create + generator

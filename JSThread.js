@@ -1,4 +1,5 @@
 'use strict';
+let polyfillStatus = 'unknown';
 
 if (!this.setImmediate) { // polyfill for non-node applications, way faster than setTimeout(func, 0)
 	let ID = 1337, funcs = {};
@@ -16,12 +17,20 @@ if (!this.setImmediate) { // polyfill for non-node applications, way faster than
 			funcs[fid] = {func, args};
 			window.postMessage({fid});
 		};
+
+		polyfillStatus = 'setImmediate polyfill';
 	} catch (err) { // fallback for non-browser applications *coughd2bscough*
 		this.setImmediate = func => setTimeout(func, 0);
+		polyfillStatus = 'setImmediate fallback polyfill';
 	}
+} else {
+	polyfillStatus = 'setImmediate exists';
 }
 
 let JSThread = { // cooperative multitasking library - accepts normal, async, or generator functions
+
+	// Status of the polyfill
+	polyfillStatus: polyfillStatus,
 
 	// promise that resolves on the next event loop
 	yield: () => new Promise(resolve => setImmediate(resolve)),
