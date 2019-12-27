@@ -54,7 +54,7 @@ let JSThread = { // cooperative multitasking library - accepts normal, async, or
 		}
 
 		return (...args) => new Promise((resolve, reject) => setImmediate(() => { // defer init until next event loop so no function code executes during current block
-			let tmp = typeof thread === 'function' ? thread(...args) : thread;
+			let tmp = thread(...args);
 
 			if (tmp && tmp.then && typeof tmp.then === 'function') {
 				tmp.then(resolve);
