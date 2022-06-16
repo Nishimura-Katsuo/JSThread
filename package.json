@@ -1,6 +1,6 @@
 {
   "name": "@nishimura-katsuo/jsthread",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple cooperative multitasking in Javascript.",
   "main": "index.js",
   "repository": {

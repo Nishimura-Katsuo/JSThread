@@ -53,39 +53,53 @@ let JSThread = { // cooperative multitasking library - accepts normal, async, or
 			throw new Error('Pseudo-Threading accepts a normal, async, or generator function!');
 		}
 
-		return (...args) => new Promise((resolve, reject) => setImmediate(() => { // defer init until next event loop so no function code executes during current block
-			let tmp = thread(...args);
+		return (...args) => new Promise((resolve, reject) => {
+			try {
+				setImmediate(() => { // defer init until next event loop so no function code executes during current block
+					let tmp;
 
-			if (tmp && tmp.then && typeof tmp.then === 'function') {
-				tmp.then(resolve);
-
-				if (typeof tmp.catch === 'function') {
-					tmp.catch(reject);
-				}
-
-				return;
-			}
-
-			if (tmp && tmp.next && typeof tmp.next === 'function') {
-				let t = () => {
-					let ret = tmp.next();
-
-					if (ret.done) {
-						resolve(ret.value);
-					} else if (typeof ret.value === 'number') {
-						setTimeout(t, ret.value);
-					} else {
-						setImmediate(t);
+					try {
+						tmp = thread(...args);
+					} catch (err) {
+						reject(err);
 					}
-				};
 
-				t();
+					if (tmp && tmp.then && typeof tmp.then === 'function') {
+						tmp.then(resolve).catch(reject);
 
-				return;
+						return;
+					}
+
+					if (tmp && tmp.next && typeof tmp.next === 'function') {
+						let t = () => {
+							let ret;
+
+							try {
+								ret = tmp.next();
+							} catch (err) {
+								reject(err);
+							}
+
+							if (ret.done) {
+								resolve(ret.value);
+							} else if (typeof ret.value === 'number') {
+								setTimeout(t, ret.value);
+							} else {
+								setImmediate(t);
+							}
+						};
+
+						t();
+
+						return;
+					}
+
+					resolve(tmp);
+				});
+			} catch (err) {
+				reject(err);
 			}
-
-			resolve(tmp);
-		}));
+		});
 	},
 
 	// creates and immediately runs thread
