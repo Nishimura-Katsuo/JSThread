@@ -78,14 +78,23 @@ let JSThread = { // cooperative multitasking library - accepts normal, async, or
 								ret = tmp.next();
 							} catch (err) {
 								reject(err);
+								return;
 							}
 
-							if (ret.done) {
-								resolve(ret.value);
-							} else if (typeof ret.value === 'number') {
-								setTimeout(t, ret.value);
+							let th = ret => {
+								if (ret.done) {
+									resolve(ret.value);
+								} else if (typeof ret.value === 'number') {
+									setTimeout(t, ret.value);
+								} else {
+									setImmediate(t);
+								}
+							};
+
+							if (ret.then) {
+								ret.then(th).catch(reject);
 							} else {
-								setImmediate(t);
+								th(ret);
 							}
 						};
 
