@@ -1,0 +1,16 @@
+{
+  "name": "@nishimura-katsuo/jsthread",
+  "version": "1.0.0",
+  "description": "Simple cooperative multitasking in Javascript.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nishimura-Katsuo/JSThread.git"
+  },
+  "author": "Nishimura-Katsuo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nishimura-Katsuo/JSThread/issues"
+  },
+  "homepage": "https://github.com/Nishimura-Katsuo/JSThread#readme"
+}
